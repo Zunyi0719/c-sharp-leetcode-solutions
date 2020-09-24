@@ -196,3 +196,64 @@ public class Solution {
         return s.Substring(st/2,max/2);
     }
 }
+
+// 马拉车算法 O(n)
+public class Solution {
+    public string LongestPalindrome(string s) 
+    {
+        if(s.Length==0) return "";
+        StringBuilder sb = new StringBuilder();
+        for(int i=0;i<s.Length;i++) sb.Append("*"+s[i]);
+        sb.Append("*");
+        
+        String ss = sb.ToString();
+        int []dp = new int[ss.Length]; 
+        int maxR = 0;
+        for(int i=1;i<ss.Length;i++)
+        {
+            if(i>dp[maxR]+maxR)
+            {
+                int l = i-1;
+                int r = i+1;
+                while(l>=0 && r<ss.Length && ss[l]==ss[r])
+                {
+                    l--;
+                    r++;
+                }
+                l++;
+                r--;
+                maxR = i;
+                dp[i] = r-i;
+            }
+            else
+            {
+                if(i+dp[2*maxR-i] >= dp[maxR]+maxR)
+                {
+                    dp[i] = dp[maxR]+maxR-i;
+                    int l = i-dp[i]-1;
+                    int r = i+dp[i]+1;
+                    while(l>=0 && r<ss.Length && ss[l]==ss[r])
+                    {
+                        l--;
+                        r++;
+                    }
+                    l++;
+                    r--;
+                    maxR = i;
+                    dp[i] = r-i;
+                }
+                else
+                {
+                    dp[i] = dp[2*maxR-i];
+                }
+            }
+        }
+        int max = 0;
+        for(int i=1;i<dp.Length;i++)
+        {
+            max = dp[i]>dp[max]? i:max;
+        }
+        
+        return s.Substring((max-dp[max]+1)/2,dp[max]);
+    }
+}
