@@ -92,3 +92,70 @@ public class Solution {
         }
     }
 }
+
+// iteration plus recur, but avoid duplicate visit
+public class Solution {
+    int row = 0;
+    int col = 0;
+    int max = 0;
+    int[,] dp;
+    
+    public string LongestPalindrome(string s) {
+        if(s.Length==0) return "";
+        int n = s.Length;
+        dp = new int[n, n];
+        
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                if(i>j || dp[i,j]!=0) continue;
+                
+                char a = s[i];
+                char b = s[j];
+                if(j-i<=1)
+                {
+                    if(a==b) update(i,j);
+                    else dp[i,j] = -1;
+                }
+                else
+                {
+                    recur(i+1,j-1,s);
+                    if(a==b && dp[i+1,j-1]==1) update(i,j);
+                    else dp[i,j] = -1;
+                }
+            }
+        }
+        return s.Substring(row,col-row+1);
+    }
+    
+    public void recur(int i,int j,string s)
+    {
+        if(dp[i,j]!=0) return;
+        
+        char a = s[i];
+        char b = s[j];
+        if(j-i<=1)
+        {
+            if(a==b) update(i,j);
+            else dp[i,j] = -1;
+        }
+        else
+        {
+            recur(i+1,j-1,s);
+            if(a==b && dp[i+1,j-1]==1) update(i,j);
+            else dp[i,j] = -1;
+        }
+    }
+    
+    public void update(int i,int j)
+    {
+        dp[i,j] = 1;
+        if(j-i+1>=max)
+        {
+            max = j-i+1;
+            row = i;
+            col = j;
+        }
+    }
+}
