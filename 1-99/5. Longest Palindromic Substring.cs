@@ -1,4 +1,4 @@
-// bot-up
+// bot-up O(n^2)
 public class Solution {
     int row = 0;
     int col = 0;
@@ -42,7 +42,7 @@ public class Solution {
     }
 }
 
-// top-down
+// top-down O(n^2)
 public class Solution {
     int row = 0;
     int col = 0;
@@ -93,7 +93,7 @@ public class Solution {
     }
 }
 
-// iteration plus recur, but avoid duplicate visit
+// iteration plus recur, but avoid duplicate visit O(n^2)
 public class Solution {
     int row = 0;
     int col = 0;
@@ -157,5 +157,42 @@ public class Solution {
             row = i;
             col = j;
         }
+    }
+}
+
+// 中心点双指针扩散 O(n^2)
+public class Solution {
+    public string LongestPalindrome(string s) 
+    {
+        if(s.Length==0) return "";
+        StringBuilder sb = new StringBuilder();
+        for(int i=0;i<s.Length;i++) sb.Append("*"+s[i]);
+        sb.Append("*");
+        
+        String ss = sb.ToString();
+        int st = 0;
+        int max = 0;
+        
+        for(int i=0;i<ss.Length;i++)
+        { 
+            int l = i-1;
+            int r = i+1;
+            
+            while(l>=0 && r<ss.Length && ss[l]==ss[r])
+            {
+                l--;
+                r++;
+            }
+            l++;
+            r--;
+            
+            if(max < r-l+1)
+            {
+                st = l;
+                max = r-l+1;
+            }
+        }
+        
+        return s.Substring(st/2,max/2);
     }
 }
