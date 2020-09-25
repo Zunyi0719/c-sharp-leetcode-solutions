@@ -257,3 +257,49 @@ public class Solution {
         return s.Substring((max-dp[max]+1)/2,dp[max]);
     }
 }
+
+// 马拉车优化，在最前面再加一个特殊字符 如'~',避免了对称时index跑到-1的情况，减少代码冗余
+public class Solution {
+    public string LongestPalindrome(string s) 
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.Append("~*");
+        
+        for(int i=0;i<s.Length;i++) sb.Append(s[i]+"*");
+        string ss = sb.ToString();
+        
+        int []dp = new int[ss.Length];
+        
+        int n = 1;
+        for(int i=1;i<ss.Length;i++)
+        {
+            dp[i] = dp[2*n-i];
+            
+            if(i+dp[i]>=dp[n]+n)
+            {
+                dp[i] = dp[n]+n>i? dp[n]+n-i:0;
+                int l = i-dp[i]-1;
+                int r = i+dp[i]+1;
+                
+                while(l>=0 && r<ss.Length && ss[l]==ss[r])
+                {
+                    l--;
+                    r++;
+                }
+                
+                l++;
+                r--;    
+                dp[i] = r-i;
+                n = i;
+            }
+        }
+        
+        int max = 0;
+        for(int i=1;i<ss.Length;i++)
+        {
+            if(dp[i]>dp[max]) max = i;
+        }
+        
+        return s.Substring((max-dp[max]-1)/2,dp[max]);
+    }
+}
